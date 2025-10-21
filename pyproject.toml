@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=80", "setuptools-scm[simple]>=8"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "retico-modelscope"
+dynamic = ["version"]
+dependencies = [
+    "torch",
+    "datasets>=3.0.0,<=3.6.0",
+    "addict",
+    "transformers",
+    "pyaudio",
+    "pydub",
+    "pillow",
+    "simplejson",
+    "sortedcontainers",
+    "sentencepiece",
+    "ms-swift[llm]",
+    "modelscope==1.31.0",
+    "retico-core>=2.0.0",
+]
+authors = [
+    {name = "Porter Rigby"},
+]
+description = "A Retico package for interfacing with ModelScope."
+readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+keywords = ["retico", "LLM", "real-time", "dialogue"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python :: 3.10",
+]
+
