@@ -41,25 +41,19 @@ class ChatbotModule(AbstractModule):
         self.top_p = top_p
 
     def process_update(self, update_message):
-        send_prompt = False
         for iu, ut in update_message:
             if ut == UpdateType.ADD:
                 self.current_output.append(iu)
             elif ut == UpdateType.REVOKE:
                 self.revoke(iu)
             elif ut == UpdateType.COMMIT:
-                send_prompt = True
+                last_commit_sentence = ""
+                for unit in self.current_output:
+                    last_commit_sentence += f"{unit.text} "
+                self.current_output = []
 
-        if send_prompt:
-            send_prompt = False
-            last_commit_sentence = ""
-            for unit in self.current_output:
-                last_commit_sentence += f"{unit.text} "
-
-            self.current_output = []
-
-            if len(last_commit_sentence) > 0:
-                self.process_prompt(last_commit_sentence, iu)
+                if len(last_commit_sentence) > 0:
+                    self.process_prompt(last_commit_sentence, iu)
 
     def process_prompt(self, last_commit_sentence, iu):
         response = self.chatbot(
@@ -69,15 +63,17 @@ class ChatbotModule(AbstractModule):
             repetition_penalty=self.repetition_penalty,
             top_p=self.top_p
         )
+        print("response:", response)
         words = response['text'].split(' ')
-        for idx, word in enumerate(words):
-            new_iu = self.create_iu()
+        new_iu = None
+        for word in words:
+            #print(word, end=' ', flush=True)
+            new_iu = self.create_iu(iu)
             new_iu.payload = word
-            if idx == len(words)-1:
-                print(word, end='\n', flush=True)
-                um = UpdateMessage.from_iu(new_iu, UpdateType.COMMIT)
-            else:
-                print(word, end=' ', flush=True)
-                um = UpdateMessage.from_iu(iu, UpdateType.ADD)
+            um = UpdateMessage.from_iu(new_iu, UpdateType.ADD)
             self.append(um)
 
+        if new_iu is not None:
+            #print('\n', flush=True)
+            um = UpdateMessage.from_iu(new_iu, UpdateType.COMMIT)
+            self.append(um)
