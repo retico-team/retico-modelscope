@@ -6,19 +6,11 @@ build-backend = "setuptools.build_meta"
 name = "retico-modelscope"
 dynamic = ["version"]
 dependencies = [
-    "torch",
-    "datasets>=3.0.0,<=3.6.0",
-    "addict",
-    "transformers",
-    "pyaudio",
-    "pydub",
-    "pillow",
-    "simplejson",
-    "sortedcontainers",
-    "sentencepiece",
-    "ms-swift[llm]",
-    "modelscope==1.31.0",
+    "accelerate",
+    "modelscope",
     "retico-core>=2.0.0",
+    "torch",
+    "transformers",
 ]
 authors = [
     {name = "Porter Rigby"},
@@ -30,6 +22,6 @@ license-files = ["LICENSE"]
 keywords = ["retico", "LLM", "real-time", "dialogue"]
 classifiers = [
     "Development Status :: 4 - Beta",
-    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.9",
 ]
 
